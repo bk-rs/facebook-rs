@@ -93,10 +93,10 @@ mod tests {
     #[test]
     fn test_parse_signature() {
         assert_eq!(
-            "sha1=2ffc1b81550c62e2c2dc7bdeef8bb40680e1ecf4"
+            "sha1=57443a4c052350a44638835d64fd66822f813319"
                 .parse::<Signature>()
                 .unwrap(),
-            Signature::Sha1("2ffc1b81550c62e2c2dc7bdeef8bb40680e1ecf4".to_owned())
+            Signature::Sha1("57443a4c052350a44638835d64fd66822f813319".to_owned())
         );
     }
 
