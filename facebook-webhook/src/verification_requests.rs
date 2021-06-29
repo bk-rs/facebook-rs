@@ -15,6 +15,10 @@ pub struct Query {
 pub fn verify(query_str: &str, verify_token: &str) -> Result<Query, VerifyError> {
     let query: Query = serde_qs::from_str(query_str)?;
 
+    verify_with_query(query, verify_token)
+}
+
+pub fn verify_with_query(query: Query, verify_token: &str) -> Result<Query, VerifyError> {
     if query.mode != "subscribe" {
         return Err(VerifyError::ModeMismatch);
     }
@@ -37,7 +41,17 @@ pub enum VerifyError {
 }
 
 pub fn pass_back(query_str: &str, verify_token: &str) -> PassBackResponse {
-    match verify(query_str, verify_token) {
+    match serde_qs::from_str::<Query>(query_str) {
+        Ok(query) => pass_back_with_query(query, verify_token),
+        Err(err) => PassBackResponse {
+            status_code: StatusCode::BAD_REQUEST,
+            body: err.to_string(),
+        },
+    }
+}
+
+pub fn pass_back_with_query(query: Query, verify_token: &str) -> PassBackResponse {
+    match verify_with_query(query, verify_token) {
         Ok(query) => PassBackResponse {
             status_code: StatusCode::OK,
             body: format!("{}", query.challenge),
