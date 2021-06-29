@@ -41,7 +41,7 @@ pub enum VerifyError {
 }
 
 pub fn pass_back(query_str: &str, verify_token: &str) -> PassBackResponse {
-    match serde_qs::from_str::<Query>(query_str) {
+    match serde_qs::from_str(query_str) {
         Ok(query) => pass_back_with_query(query, verify_token),
         Err(err) => PassBackResponse {
             status_code: StatusCode::BAD_REQUEST,
