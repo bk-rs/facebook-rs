@@ -1,4 +1,5 @@
 /// https://developers.facebook.com/docs/graph-api/webhooks/reference/instagram
+/// Require [Enable Page Subscriptions](https://developers.facebook.com/docs/instagram-api/guides/webhooks#step-2--enable-page-subscriptions)
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use serde_json::Value;

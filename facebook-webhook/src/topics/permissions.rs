@@ -1,4 +1,5 @@
 /// https://developers.facebook.com/docs/graph-api/webhooks/reference/permissions/
+/// Don't require [Page Subscribed Apps](https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps#Creating)
 use serde::{de::Deserializer, Deserialize};
 
 #[derive(Deserialize, Debug, Clone)]
