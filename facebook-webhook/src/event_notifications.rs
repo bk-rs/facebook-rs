@@ -1,8 +1,14 @@
 /// https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications
 use std::str::{self, FromStr};
 
+use chrono::{serde::ts_seconds, DateTime, Utc};
 use hmac::{Hmac, Mac as _, NewMac as _};
+use http::StatusCode;
+use serde::Deserialize;
+use serde_aux::field_attributes::deserialize_number_from_string;
 use sha1::Sha1;
+
+use crate::topics::{instagram::Instagram, permissions::Permissions};
 
 type HmacSha1 = Hmac<Sha1>;
 
@@ -86,6 +92,62 @@ pub enum VerifyPayloadError {
     SignatureMismatch,
 }
 
+// https://developers.facebook.com/docs/graph-api/webhooks/reference
+#[derive(Deserialize, Debug, Clone)]
+#[serde(tag = "object", content = "entry", rename_all = "snake_case")]
+pub enum Payload {
+    Instagram(Vec<InstagramObjectEntry>),
+    Permissions(Vec<PermissionsObjectEntry>),
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct InstagramObjectEntry {
+    // 0 is test
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub id: u64,
+    #[serde(with = "ts_seconds")]
+    pub time: DateTime<Utc>,
+    pub changes: Vec<Instagram>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct PermissionsObjectEntry {
+    // 0 is test
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub id: u64,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub uid: u64,
+    #[serde(with = "ts_seconds")]
+    pub time: DateTime<Utc>,
+    pub changes: Vec<Permissions>,
+}
+
+pub fn pass_back(
+    signature_header_value: &[u8],
+    request_body_bytes: &[u8],
+    app_secret: &str,
+) -> PassBackResponse {
+    match verify_payload(signature_header_value, request_body_bytes, app_secret) {
+        Ok(_) => {
+            unimplemented!()
+        }
+        Err(err) => match err {
+            VerifyPayloadError::SignatureHeaderValueInvalid(_) => PassBackResponse {
+                status_code: StatusCode::BAD_REQUEST,
+            },
+            VerifyPayloadError::CalculateSignatureFailed
+            | VerifyPayloadError::SignatureMismatch => PassBackResponse {
+                status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            },
+        },
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct PassBackResponse {
+    pub status_code: StatusCode,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -106,5 +168,84 @@ mod tests {
             sha1_payload(b"value", "key").unwrap(),
             "57443a4c052350a44638835d64fd66822f813319"
         );
+    }
+
+    #[test]
+    fn test_payload() {
+        let json = r#"
+        {
+            "object": "instagram",
+            "entry": [
+                {
+                    "id": "0",
+                    "time": 1624005617,
+                    "changes": [
+                        {
+                            "field": "story_insights",
+                            "value": {
+                                "media_id": "17887498072083520",
+                                "impressions": 444,
+                                "reach": 44,
+                                "taps_forward": 4,
+                                "taps_back": 3,
+                                "exits": 3,
+                                "replies": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        "#;
+
+        match serde_json::from_str::<Payload>(json) {
+            Ok(Payload::Instagram(entry_vec)) => {
+                println!("{:?}", entry_vec);
+
+                assert_eq!(entry_vec.len(), 1);
+                let entry = entry_vec.first().unwrap();
+                assert_eq!(entry.id, 0);
+                assert_eq!(entry.changes.len(), 1);
+            }
+            Ok(payload) => assert!(false, "{:?}", payload),
+            Err(err) => assert!(false, "{}", err),
+        }
+
+        let json = r#"
+        {
+            "object": "permissions",
+            "entry": [
+                {
+                    "id": "0",
+                    "uid": "0",
+                    "time": 1624610156,
+                    "changes": [
+                        {
+                            "field": "instagram_basic",
+                            "value": {
+                                "verb": "granted",
+                                "target_ids": [
+                                    "123123123123123",
+                                    "321321321321321"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        "#;
+        match serde_json::from_str::<Payload>(json) {
+            Ok(Payload::Permissions(entry_vec)) => {
+                println!("{:?}", entry_vec);
+
+                assert_eq!(entry_vec.len(), 1);
+                let entry = entry_vec.first().unwrap();
+                assert_eq!(entry.id, 0);
+                assert_eq!(entry.changes.len(), 1);
+            }
+            Ok(payload) => assert!(false, "{:?}", payload),
+            Err(err) => assert!(false, "{}", err),
+        }
     }
 }
