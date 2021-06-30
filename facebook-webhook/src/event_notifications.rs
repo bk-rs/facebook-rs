@@ -4,6 +4,7 @@ use std::{
     future::Future,
     pin::Pin,
     str::{self, FromStr},
+    sync::Arc,
 };
 
 use chrono::{serde::ts_seconds, DateTime, Utc};
@@ -118,6 +119,7 @@ pub struct InstagramObjectEntry {
 #[derive(Deserialize, Debug, Clone)]
 pub struct PermissionsObjectEntry {
     // 0 is test
+    // id == uid == FB Business Integration User ID
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     #[serde(deserialize_with = "deserialize_number_from_string")]
@@ -128,21 +130,18 @@ pub struct PermissionsObjectEntry {
 }
 
 pub type PassBackCallbackFn<'a, C> = Box<
-    dyn Fn(
-            Payload,
-            &'a C,
-        ) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn error::Error>>> + Send>>
+    dyn Fn(Payload, C) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn error::Error>>> + Send>>
         + Send
         + Sync
         + 'a,
 >;
 
-pub async fn pass_back<'a, C>(
+pub async fn pass_back<C>(
     signature_header_value: &[u8],
     request_body_bytes: &[u8],
     app_secret: &str,
-    ctx: &'a C,
-    callback: PassBackCallbackFn<'a, C>,
+    ctx: C,
+    callback: Arc<PassBackCallbackFn<'_, C>>,
 ) -> PassBackResponse {
     match verify_payload(signature_header_value, request_body_bytes, app_secret) {
         Ok(_) => match serde_json::from_slice::<Payload>(request_body_bytes) {

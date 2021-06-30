@@ -1,4 +1,6 @@
 [workspace]
 members = [
     "facebook-webhook",
+    "facebook-webhook/integrations/warp",
+    "facebook-webhook/integrations/warp-demo",
 ]
