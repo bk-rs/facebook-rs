@@ -1,4 +1,10 @@
 /*
+sudo vim /etc/nginx/conf.d/xx.conf
+    location ~/fb_webhooks/(\d+) {
+        proxy_pass http://127.0.0.1:4001;
+    }
+sudo systemctl reload nginx
+
 cargo run -p facebook-webhook-warp-demo -- 202000000000000 YOUR_APP_SECRET
 */
 
@@ -15,7 +21,7 @@ async fn main() -> Result<(), Box<dyn error::Error>> {
 
 async fn run() -> Result<(), Box<dyn error::Error>> {
     if env::var_os("RUST_LOG").is_none() {
-        env::set_var("RUST_LOG", "facebook-webhook-warp-demo=info");
+        env::set_var("RUST_LOG", "facebook-webhook=info");
     }
     pretty_env_logger::init();
 
@@ -50,7 +56,7 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
         .parse()?;
 
     println!(
-        r#"facebook-webhook-warp-demo app_id: "{}" path_prefix: "{}" verify_token: "{}" listen_port: {}"#,
+        r#"app_id: "{}" path_prefix: "{}" verify_token: "{}" listen_port: {}"#,
         app_id, path_prefix, verify_token, listen_port
     );
 
@@ -72,7 +78,7 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
         }),
     );
 
-    let routes = api.with(warp::log("facebook-webhook-warp-demo"));
+    let routes = api.with(warp::log("facebook-webhook"));
 
     warp::serve(routes).run(([127, 0, 0, 1], listen_port)).await;
 
