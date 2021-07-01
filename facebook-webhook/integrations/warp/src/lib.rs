@@ -92,7 +92,9 @@ fn event_notifications_filter<C: Context>(
                                 )
                                 .await;
 
-                                Ok(Response::builder().status(res.status_code).body("".into()))
+                                Ok(Response::builder()
+                                    .status(res.status_code)
+                                    .body(res.body.into()))
                             }
                             Err(err) => Ok(Response::builder()
                                 .status(StatusCode::INTERNAL_SERVER_ERROR)
