@@ -87,19 +87,19 @@ struct MyContext {
     db: i64,
 }
 impl Context for MyContext {
-    fn get_verify_token(&self, app_id: u64) -> Result<String, String> {
+    fn get_verify_token(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>> {
         if app_id == self.app_id {
             Ok(self.verify_token.to_owned())
         } else {
-            Err("app_id mismatch".to_owned())
+            Err("app_id mismatch".into())
         }
     }
 
-    fn get_app_secret(&self, app_id: u64) -> Result<String, String> {
+    fn get_app_secret(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>> {
         if app_id == self.app_id {
             Ok(self.app_secret.to_owned())
         } else {
-            Err("app_id mismatch".to_owned())
+            Err("app_id mismatch".into())
         }
     }
 }

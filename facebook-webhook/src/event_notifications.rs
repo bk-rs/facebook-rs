@@ -148,22 +148,27 @@ pub async fn pass_back<C>(
             Ok(payload) => match callback(payload, ctx).await {
                 Ok(_) => PassBackResponse {
                     status_code: StatusCode::OK,
+                    body: "".to_owned(),
                 },
-                Err(_) => PassBackResponse {
+                Err(err) => PassBackResponse {
                     status_code: StatusCode::INTERNAL_SERVER_ERROR,
+                    body: err.to_string(),
                 },
             },
-            Err(_) => PassBackResponse {
+            Err(err) => PassBackResponse {
                 status_code: StatusCode::INTERNAL_SERVER_ERROR,
+                body: err.to_string(),
             },
         },
         Err(err) => match err {
             VerifyPayloadError::SignatureHeaderValueInvalid(_) => PassBackResponse {
                 status_code: StatusCode::BAD_REQUEST,
+                body: err.to_string(),
             },
             VerifyPayloadError::CalculateSignatureFailed
             | VerifyPayloadError::SignatureMismatch => PassBackResponse {
                 status_code: StatusCode::INTERNAL_SERVER_ERROR,
+                body: err.to_string(),
             },
         },
     }
@@ -172,6 +177,7 @@ pub async fn pass_back<C>(
 #[derive(Debug, Clone)]
 pub struct PassBackResponse {
     pub status_code: StatusCode,
+    pub body: String,
 }
 
 #[cfg(test)]

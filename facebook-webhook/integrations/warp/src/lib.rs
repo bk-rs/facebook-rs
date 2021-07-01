@@ -1,6 +1,6 @@
 pub use facebook_webhook;
 
-use std::{convert::Infallible, sync::Arc};
+use std::{convert::Infallible, error, sync::Arc};
 
 use bytes::Bytes;
 use facebook_webhook::{
@@ -14,8 +14,8 @@ use warp::{
 };
 
 pub trait Context: Send + Sync + Clone {
-    fn get_verify_token(&self, app_id: u64) -> Result<String, String>;
-    fn get_app_secret(&self, app_id: u64) -> Result<String, String>;
+    fn get_verify_token(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>>;
+    fn get_app_secret(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>>;
 }
 
 pub fn handle<C: Context>(
@@ -53,9 +53,9 @@ fn verification_requests_filter<C: Context>(
                                 .status(res.status_code)
                                 .body(res.body.into()))
                         }
-                        Err(_) => Ok(Response::builder()
+                        Err(err) => Ok(Response::builder()
                             .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .body("".into())),
+                            .body(err.to_string().into())),
                     }
                 };
                 part
@@ -94,9 +94,9 @@ fn event_notifications_filter<C: Context>(
 
                                 Ok(Response::builder().status(res.status_code).body("".into()))
                             }
-                            Err(_) => Ok(Response::builder()
+                            Err(err) => Ok(Response::builder()
                                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                                .body("".into())),
+                                .body(err.to_string().into())),
                         }
                     };
                     part
