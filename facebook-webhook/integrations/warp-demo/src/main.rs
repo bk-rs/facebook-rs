@@ -1,5 +1,5 @@
 /*
-cargo run -p facebook-webhook-warp-demo -- YOUR_APP_ID YOUR_APP_SECRET
+cargo run -p facebook-webhook-warp-demo -- 202000000000000 YOUR_APP_SECRET
 */
 
 use std::{env, error};
@@ -19,10 +19,11 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
     }
     pretty_env_logger::init();
 
-    let app_id = env::args()
+    let app_id: u64 = env::args()
         .nth(1)
         .or_else(|| env::var("APP_ID").ok())
-        .ok_or("app_id missing")?;
+        .ok_or("app_id missing")?
+        .parse()?;
     let app_secret = env::args()
         .nth(2)
         .or_else(|| env::var("APP_SECRET").ok())
@@ -53,14 +54,18 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
         app_id, path_prefix, verify_token, listen_port
     );
 
-    let ctx = MyContext { app_id, app_secret };
+    let ctx = MyContext {
+        app_id,
+        app_secret,
+        verify_token,
+        db: 1,
+    };
     let api = facebook_webhook_warp::handle(
         path_prefix,
-        verify_token,
         ctx,
-        Box::new(move |payload, _ctx| {
+        Box::new(move |payload, ctx| {
             Box::pin(async move {
-                println!("payload: {:?}", payload);
+                println!("payload: {:?} db: {:?}", payload, ctx.db);
 
                 Ok(())
             })
@@ -76,7 +81,25 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
 
 #[derive(Clone)]
 struct MyContext {
-    app_id: String,
+    app_id: u64,
     app_secret: String,
+    verify_token: String,
+    db: i64,
 }
-impl Context for MyContext {}
+impl Context for MyContext {
+    fn get_verify_token(&self, app_id: u64) -> Result<String, String> {
+        if app_id == self.app_id {
+            Ok(self.verify_token.to_owned())
+        } else {
+            Err("app_id mismatch".to_owned())
+        }
+    }
+
+    fn get_app_secret(&self, app_id: u64) -> Result<String, String> {
+        if app_id == self.app_id {
+            Ok(self.app_secret.to_owned())
+        } else {
+            Err("app_id mismatch".to_owned())
+        }
+    }
+}
