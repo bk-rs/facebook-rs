@@ -14,6 +14,8 @@ pub enum Instagram {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct CommentsValue {
+    // https://developers.facebook.com/docs/instagram-api/reference/ig-comment
+    // id == IG Comment id
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     pub text: String,
@@ -24,16 +26,23 @@ pub struct CommentsValue {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct MentionsValue {
+    // https://developers.facebook.com/docs/instagram-api/reference/ig-media
+    // media_id == IG Media id
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub media_id: u64,
+    // https://developers.facebook.com/docs/instagram-api/reference/ig-comment
+    // comment_id == IG Comment id
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub comment_id: u64,
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct StoryInsightsValue {
+    // https://developers.facebook.com/docs/instagram-api/reference/ig-media
+    // media_id == IG Media id
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub media_id: u64,
+    // "Story Metrics" in https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights
     pub impressions: isize,
     pub reach: isize,
     pub taps_forward: isize,

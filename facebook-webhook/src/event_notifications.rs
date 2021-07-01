@@ -108,7 +108,9 @@ pub enum Payload {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct InstagramObjectEntry {
-    // 0 is test
+    // https://developers.facebook.com/docs/instagram-api/reference/ig-user
+    // id == IG User id
+    // When test, it is 0
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     #[serde(with = "ts_seconds")]
@@ -118,8 +120,9 @@ pub struct InstagramObjectEntry {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct PermissionsObjectEntry {
-    // 0 is test
+    // https://www.facebook.com/settings?tab=business_tools&ref=settings
     // id == uid == FB Business Integration User ID
+    // When test, it is 0
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     #[serde(deserialize_with = "deserialize_number_from_string")]
