@@ -27,15 +27,15 @@ pub fn parse<T: Payload>(signed_request: &str, app_secret: &str) -> Result<T, Pa
 
     let sig = base64::decode_config(encoded_sig, base64::URL_SAFE)
         .map_err(ParseError::EncodedSignatureBase64DecodeFailed)?;
-    let payload = base64::decode_config(payload, base64::URL_SAFE)
+    let data = base64::decode_config(payload, base64::URL_SAFE)
         .map_err(ParseError::EncodedSignatureBase64DecodeFailed)?;
 
-    let data: T = serde_json::from_slice(&payload).map_err(ParseError::PayloadJsonDecodeFailed)?;
+    let data: T = serde_json::from_slice(&data).map_err(ParseError::PayloadJsonDecodeFailed)?;
 
     let algorithm = data.algorithm().unwrap_or_else(|| NORMALLY_ALGORITHM);
 
     let expected_sig = match algorithm {
-        NORMALLY_ALGORITHM => hmac_sha256_payload(&payload, app_secret)
+        NORMALLY_ALGORITHM => hmac_sha256_payload(payload.as_bytes(), app_secret)
             .map_err(|_| ParseError::SignatureCalculateFailed)?,
         _ => return Err(ParseError::AlgorithmUnknown(algorithm.to_owned())),
     };
@@ -101,8 +101,8 @@ mod tests {
             }
         }
 
-        // echo -n '{"user_id":"0","algorithm":"HMAC-SHA256","issued_at":1624244156}' | base64 | tr '/+' '_-' | tr -d '='
-        // echo -n 'eyJ1c2VyX2lkIjoiMCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI0MjQ0MTU2fQ' | openssl sha256 -hmac "key" -binary | base64 | tr '/+' '_-' | tr -d '='
+        // echo -n '{"user_id":"0","algorithm":"HMAC-SHA256","issued_at":1624244156}' | base64 | tr '+/' '-_' | tr -d '='
+        // echo -n 'eyJ1c2VyX2lkIjoiMCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI0MjQ0MTU2fQ' | openssl sha256 -hmac "key" -binary | base64 | tr '+/' '-_' | tr -d '='
         let signed_request = "Mf_s6nTb38UYqioBmPqu0Ewm9souPZB9I2fIGwV729U.eyJ1c2VyX2lkIjoiMCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI0MjQ0MTU2fQ";
 
         match parse::<MyPayload>(signed_request, "key") {
