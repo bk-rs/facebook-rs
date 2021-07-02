@@ -65,7 +65,7 @@ pub fn verify_payload(
 
     match signature {
         Signature::Sha1(expected_sig) => {
-            let sig = sha1_payload(request_body_bytes, app_secret)
+            let sig = hmac_sha1_payload(request_body_bytes, app_secret)
                 .map_err(|_| VerifyPayloadError::CalculateSignatureFailed)?;
 
             if expected_sig.to_ascii_lowercase() != sig {
@@ -79,7 +79,7 @@ pub fn verify_payload(
 
 // $ echo -n "value" | openssl sha1 -hmac "key"
 // (stdin)= 57443a4c052350a44638835d64fd66822f813319
-fn sha1_payload(request_body_bytes: &[u8], app_secret: &str) -> Result<String, String> {
+fn hmac_sha1_payload(request_body_bytes: &[u8], app_secret: &str) -> Result<String, String> {
     let mut hmac =
         HmacSha1::new_from_slice(app_secret.as_bytes()).map_err(|err| err.to_string())?;
     hmac.update(request_body_bytes);
@@ -204,9 +204,9 @@ mod tests {
     }
 
     #[test]
-    fn test_sha1_payload() {
+    fn test_hmac_sha1_payload() {
         assert_eq!(
-            sha1_payload(b"value", "key").unwrap(),
+            hmac_sha1_payload(b"value", "key").unwrap(),
             "57443a4c052350a44638835d64fd66822f813319"
         );
     }
