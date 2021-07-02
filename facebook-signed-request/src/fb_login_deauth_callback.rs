@@ -1,3 +1,5 @@
+//! [Official doc](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#deauth-callback)
+
 use chrono::{serde::ts_seconds, DateTime, Utc};
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;
