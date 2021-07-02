@@ -1,5 +1,3 @@
-//! [Official doc](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#deauth-callback)
-
 use std::{error, future::Future, pin::Pin, sync::Arc};
 
 use facebook_signed_request::{
