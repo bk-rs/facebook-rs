@@ -71,7 +71,9 @@ async fn run() -> Result<(), Box<dyn error::Error>> {
         ctx,
         Box::new(move |payload, ctx| {
             Box::pin(async move {
-                println!("payload: {:?} db: {:?}", payload, ctx.db);
+                let _ = ctx.db;
+
+                println!("payload: {:?}", payload);
 
                 Ok(())
             })
