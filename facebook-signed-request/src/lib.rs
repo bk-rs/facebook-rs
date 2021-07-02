@@ -4,6 +4,9 @@ use sha2::Sha256;
 
 type HmacSha256 = Hmac<Sha256>;
 
+#[cfg(feature = "with-fb-login-deauth-callback")]
+pub mod fb_login_deauth_callback;
+
 pub const NORMALLY_ALGORITHM: &str = "HMAC-SHA256";
 
 pub trait Payload: DeserializeOwned {
@@ -17,10 +20,10 @@ pub fn parse<T: Payload>(signed_request: &str, app_secret: &str) -> Result<T, Pa
     let mut signed_request_split = signed_request.split('.');
     let encoded_sig = signed_request_split
         .next()
-        .ok_or_else(|| ParseError::EncodedSignatureMissing)?;
+        .ok_or(ParseError::EncodedSignatureMissing)?;
     let payload = signed_request_split
         .next()
-        .ok_or_else(|| ParseError::PayloadMissing)?;
+        .ok_or(ParseError::PayloadMissing)?;
     if signed_request_split.next().is_some() {
         return Err(ParseError::SignedRequestInvalid);
     }
@@ -32,7 +35,7 @@ pub fn parse<T: Payload>(signed_request: &str, app_secret: &str) -> Result<T, Pa
 
     let data: T = serde_json::from_slice(&data).map_err(ParseError::PayloadJsonDecodeFailed)?;
 
-    let algorithm = data.algorithm().unwrap_or_else(|| NORMALLY_ALGORITHM);
+    let algorithm = data.algorithm().unwrap_or(NORMALLY_ALGORITHM);
 
     let expected_sig = match algorithm {
         NORMALLY_ALGORITHM => hmac_sha256_payload(payload.as_bytes(), app_secret)

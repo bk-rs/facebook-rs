@@ -1,7 +1,23 @@
 [package]
 name = "facebook-signed-request"
 version = "0.1.0"
+authors = ["vkill <vkill.net@gmail.com>"]
 edition = "2018"
+description = "Facebook - Signed Request"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/bk-rs/facebook-rs"
+homepage = "https://github.com/bk-rs/facebook-rs"
+documentation = "https://docs.rs/facebook-signed-request"
+keywords = []
+categories = []
+readme = "README.md"
+
+[package.metadata.docs.rs]
+features = [ "with-fb-login-deauth-callback" ]
+
+[features]
+default = ["with-fb-login-deauth-callback"]
+with-fb-login-deauth-callback = ["serde-aux", "chrono"]
 
 [dependencies]
 base64 = { version ="0.13", default-features = false, features = ["std"] }
@@ -9,6 +25,9 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false, features = ["std"] }
 hmac = { version ="0.11", default-features = false }
 sha2 = { version ="0.9", default-features = false }
+
+serde-aux = { version = "2.2", default-features = false, optional = true }
+chrono = { version = "0.4", default-features = false, features = ["serde"], optional = true }
 
 thiserror = { version = "1.0", default-features = false }
 
