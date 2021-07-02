@@ -1,0 +1,11 @@
+[package]
+name = "facebook-fb-login-deauth-callback-warp-demo"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+facebook-fb-login-deauth-callback-warp = { path = "../warp", version = "=0.1.0" }
+
+tokio = { version = "1.7", default-features = false, features = ["macros", "rt-multi-thread"] }
+pretty_env_logger = "0.4"
+warp = "0.3"

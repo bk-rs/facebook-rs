@@ -1,5 +1,8 @@
 [workspace]
 members = [
+    "facebook-fb-login-deauth-callback",
+    "facebook-fb-login-deauth-callback/integrations/warp",
+    "facebook-fb-login-deauth-callback/integrations/warp-demo",
     "facebook-signed-request",
     "facebook-webhook",
     "facebook-webhook/integrations/warp",
