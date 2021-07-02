@@ -1,4 +1,5 @@
-/// https://developers.facebook.com/docs/graph-api/webhooks/getting-started#verification-requests
+//! [Official doc](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#verification-requests)
+
 use http::StatusCode;
 use serde::Deserialize;
 

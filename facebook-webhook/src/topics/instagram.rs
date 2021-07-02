@@ -1,5 +1,7 @@
-/// https://developers.facebook.com/docs/graph-api/webhooks/reference/instagram
-/// Require [Enable Page Subscriptions](https://developers.facebook.com/docs/instagram-api/guides/webhooks#step-2--enable-page-subscriptions)
+//! [Official doc](https://developers.facebook.com/docs/graph-api/webhooks/reference/instagram)
+//!
+//! Require [Enable Page Subscriptions](https://developers.facebook.com/docs/instagram-api/guides/webhooks#step-2--enable-page-subscriptions)
+
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use serde_json::Value;
@@ -14,35 +16,37 @@ pub enum Instagram {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct CommentsValue {
-    // https://developers.facebook.com/docs/instagram-api/reference/ig-comment
-    // id == IG Comment id
+    /// id == [IG Comment id](https://developers.facebook.com/docs/instagram-api/reference/ig-comment)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     pub text: String,
-    // Click "Test" in facebook webhooks configure page, it's always None.
-    // Bug in doc page https://developers.facebook.com/docs/graph-api/webhooks/reference/instagram/v11.0#fields , it's not None.
+    /// Click "Test" in facebook webhooks configure page, it's always None.
+    /// Bug in [doc page](https://developers.facebook.com/docs/graph-api/webhooks/reference/instagram/v11.0#fields) , it's not None.
     pub media: Option<Value>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct MentionsValue {
-    // https://developers.facebook.com/docs/instagram-api/reference/ig-media
-    // media_id == IG Media id
+    /// media_id == [IG Media id](https://developers.facebook.com/docs/instagram-api/reference/ig-media)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub media_id: u64,
-    // https://developers.facebook.com/docs/instagram-api/reference/ig-comment
-    // comment_id == IG Comment id
+    /// comment_id == [IG Comment id](https://developers.facebook.com/docs/instagram-api/reference/ig-comment)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub comment_id: u64,
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct StoryInsightsValue {
-    // https://developers.facebook.com/docs/instagram-api/reference/ig-media
-    // media_id == IG Media id
+    /// media_id == [IG Media id](https://developers.facebook.com/docs/instagram-api/reference/ig-media)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub media_id: u64,
-    // "Story Metrics" in https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights
+    /// metrics == ["Story Metrics"](https://developers.facebook.com/docs/instagram-api/reference/ig-media/insights)
+    #[serde(flatten)]
+    pub metrics: StoryInsightsMetrics,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct StoryInsightsMetrics {
     pub impressions: isize,
     pub reach: isize,
     pub taps_forward: isize,
@@ -76,6 +80,7 @@ mod tests {
                 println!("{:?}", v);
 
                 assert_eq!(v.media_id, 17887498072083520);
+                assert_eq!(v.metrics.impressions, 444);
             }
             Ok(v) => assert!(false, "{:?}", v),
             Err(err) => assert!(false, "{}", err),

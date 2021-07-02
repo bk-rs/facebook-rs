@@ -1,4 +1,5 @@
-/// https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications
+//! [Official doc](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications)
+
 use std::{
     error,
     future::Future,
@@ -98,7 +99,6 @@ pub enum VerifyPayloadError {
     SignatureMismatch,
 }
 
-// https://developers.facebook.com/docs/graph-api/webhooks/reference
 #[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "object", content = "entry", rename_all = "snake_case")]
 pub enum Payload {
@@ -108,21 +108,22 @@ pub enum Payload {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct InstagramObjectEntry {
-    // https://developers.facebook.com/docs/instagram-api/reference/ig-user
-    // id == IG User id
-    // When test, it is 0
+    /// id == [IG User id](https://developers.facebook.com/docs/instagram-api/reference/ig-user)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     #[serde(with = "ts_seconds")]
     pub time: DateTime<Utc>,
     pub changes: Vec<Instagram>,
 }
+impl InstagramObjectEntry {
+    pub fn is_test(&self) -> bool {
+        self.id == 0
+    }
+}
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct PermissionsObjectEntry {
-    // https://www.facebook.com/settings?tab=business_tools&ref=settings
-    // id == uid == FB Business Integration User ID
-    // When test, it is 0
+    /// id == uid == [FB Business Integration User ID](https://www.facebook.com/settings?tab=business_tools&ref=settings)
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub id: u64,
     #[serde(deserialize_with = "deserialize_number_from_string")]
@@ -130,6 +131,11 @@ pub struct PermissionsObjectEntry {
     #[serde(with = "ts_seconds")]
     pub time: DateTime<Utc>,
     pub changes: Vec<Permissions>,
+}
+impl PermissionsObjectEntry {
+    pub fn is_test(&self) -> bool {
+        self.id == 0
+    }
 }
 
 pub type PassBackCallbackFn<'a, C> = Box<
