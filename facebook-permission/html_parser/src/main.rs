@@ -23,9 +23,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         .unwrap();
 
     let permission_index_selector = Selector::parse("h3").unwrap();
-    let permission_index_iter = login_permissions_div
-        .select(&permission_index_selector)
-        .into_iter();
+    let permission_index_select = login_permissions_div.select(&permission_index_selector);
 
     let permission_table_selector = Selector::parse("div:nth-child(n+2) table").unwrap();
     let permission_table_vec: Vec<_> = login_permissions_div
@@ -38,7 +36,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     let permission_table_td_a_selector = Selector::parse("a:first-child").unwrap();
 
     let mut data = vec![];
-    for (i, permission_index) in permission_index_iter.enumerate() {
+    for (i, permission_index) in permission_index_select.enumerate() {
         let is_deprecated = permission_index.inner_html() == "Deprecated Permissions";
 
         let permission_table = permission_table_vec[i];
