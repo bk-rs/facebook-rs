@@ -6,3 +6,4 @@ edition = "2018"
 [dependencies]
 scraper = "0.12"
 selectors = "0.22"
+convert_case = "0.4"

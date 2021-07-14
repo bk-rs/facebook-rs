@@ -4,6 +4,7 @@ cargo run -p facebook-permission-html_parser
 
 use std::error;
 
+use convert_case::{Case, Casing as _};
 use scraper::{Html, Selector};
 use selectors::Element as _;
 
@@ -61,8 +62,14 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         }
     }
 
+    println!("==============================");
     for (_, name, _) in data.iter().filter(|(is_deprecated, _, _)| !is_deprecated) {
-        println!("{},", name);
+        println!("{},", name.to_case(Case::Pascal));
+    }
+
+    println!("==============================");
+    for (_, name, _) in data.iter().filter(|(is_deprecated, _, _)| !is_deprecated) {
+        println!(r#""{}","#, name);
     }
 
     Ok(())
