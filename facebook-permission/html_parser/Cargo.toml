@@ -1,0 +1,8 @@
+[package]
+name = "facebook-permission-html_parser"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+scraper = "0.12"
+selectors = "0.22"
