@@ -4,6 +4,7 @@ members = [
     "facebook-fb-login-deauth-callback/integrations/warp",
     "facebook-fb-login-deauth-callback/integrations/warp-demo",
     "facebook-graph-api-node/facebook-graph-api-node",
+    "facebook-graph-api-url-parser",
     "facebook-permission",
     "facebook-permission/html_parser",
     "facebook-signed-request",
