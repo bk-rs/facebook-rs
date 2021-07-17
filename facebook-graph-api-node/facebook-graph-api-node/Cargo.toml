@@ -1,0 +1,8 @@
+[package]
+name = "facebook-graph-api-node"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde-aux = { version = "2.2", default-features = false }
