@@ -90,11 +90,11 @@ mod tests {
                 .as_str(),
             "meatyhamhock",
         ) {
-            Ok(_) => assert!(false),
+            Ok(_) => panic!(""),
             Err(VerifyError::QueryInvalid(err)) => {
                 assert!(err.to_string().contains("missing field `hub.mode`"))
             }
-            Err(err) => assert!(false, "{}", err),
+            Err(err) => panic!("{}", err),
         }
 
         match verify(
@@ -103,15 +103,15 @@ mod tests {
                 .as_str(),
             "meatyhamhock",
         ) {
-            Ok(_) => assert!(false),
+            Ok(_) => panic!(""),
             Err(VerifyError::ModeMismatch) => (),
-            Err(err) => assert!(false, "{}", err),
+            Err(err) => panic!("{}", err),
         }
 
         match verify(SAMPLE_QUERY_STR, "FOO") {
-            Ok(_) => assert!(false),
+            Ok(_) => panic!(""),
             Err(VerifyError::VerifyTokenMismatch) => (),
-            Err(err) => assert!(false, "{}", err),
+            Err(err) => panic!("{}", err),
         }
     }
 

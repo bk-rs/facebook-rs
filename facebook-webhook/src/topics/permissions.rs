@@ -83,8 +83,8 @@ mod tests {
                 assert_eq!(v.value.verb, Verb::Granted);
                 assert_eq!(v.value.target_ids, None);
             }
-            Ok(v) => assert!(false, "{:?}", v),
-            Err(err) => assert!(false, "{}", err),
+            Ok(v) => panic!("{:?}", v),
+            Err(err) => panic!("{}", err),
         }
 
         let json = r#"
@@ -109,8 +109,8 @@ mod tests {
                     Some(vec![123123123123123, 321321321321321])
                 );
             }
-            Ok(v) => assert!(false, "{:?}", v),
-            Err(err) => assert!(false, "{}", err),
+            Ok(v) => panic!("{:?}", v),
+            Err(err) => panic!("{}", err),
         }
     }
 }

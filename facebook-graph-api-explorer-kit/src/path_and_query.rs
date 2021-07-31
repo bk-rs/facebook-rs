@@ -77,41 +77,41 @@ mod tests {
     fn test_parse() {
         match parse("", None) {
             Err(ParseError::PathInvalid(_)) => {}
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("/", None) {
             Err(ParseError::PathInvalid(_)) => {}
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
 
         match parse("foo", None) {
             Err(ParseError::RootIsUnknown) => {}
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
 
         match parse("me", None) {
             Ok(root) => assert_eq!(root, Root::Node("User", None)),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("780170842505209", Some("User")) {
             Ok(root) => assert_eq!(root, Root::Node("User", None)),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("me?fields=id,name", None) {
             Ok(root) => assert_eq!(root, Root::Node("User", None)),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("me/accounts", None) {
             Ok(root) => assert_eq!(root, Root::Node("User", Some("accounts".to_owned()))),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("me/accounts?fields=id,name", None) {
             Ok(root) => assert_eq!(root, Root::Node("User", Some("accounts".to_owned()))),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("me/accounts/foo", None) {
             Err(ParseError::PathInvalid(_)) => {}
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
 
         match parse(
@@ -119,11 +119,11 @@ mod tests {
             None,
         ) {
             Ok(root) => assert_eq!(root, Root::Edge("ig_hashtag_search".to_owned())),
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
         match parse("ig_hashtag_search/foo", None) {
             Err(ParseError::PathInvalid(_)) => {}
-            err => assert!(false, "{:?}", err),
+            err => panic!("{:?}", err),
         }
     }
 }

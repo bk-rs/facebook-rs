@@ -111,7 +111,7 @@ mod tests {
                 format!(r#"{{"permission": "{}"}}"#, permission).as_str(),
             ) {
                 Ok(_) => {}
-                Err(err) => assert!(false, "{}", err),
+                Err(err) => panic!("{}", err),
             }
         }
 

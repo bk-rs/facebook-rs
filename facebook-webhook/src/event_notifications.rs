@@ -248,8 +248,8 @@ mod tests {
                 assert_eq!(entry.id, 0);
                 assert_eq!(entry.changes.len(), 1);
             }
-            Ok(payload) => assert!(false, "{:?}", payload),
-            Err(err) => assert!(false, "{}", err),
+            Ok(payload) => panic!("{:?}", payload),
+            Err(err) => panic!("{}", err),
         }
 
         let json = r#"
@@ -285,8 +285,8 @@ mod tests {
                 assert_eq!(entry.id, 0);
                 assert_eq!(entry.changes.len(), 1);
             }
-            Ok(payload) => assert!(false, "{:?}", payload),
-            Err(err) => assert!(false, "{}", err),
+            Ok(payload) => panic!("{:?}", payload),
+            Err(err) => panic!("{}", err),
         }
     }
 }

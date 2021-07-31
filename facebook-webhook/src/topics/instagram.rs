@@ -82,8 +82,8 @@ mod tests {
                 assert_eq!(v.media_id, 17887498072083520);
                 assert_eq!(v.metrics.impressions, 444);
             }
-            Ok(v) => assert!(false, "{:?}", v),
-            Err(err) => assert!(false, "{}", err),
+            Ok(v) => panic!("{:?}", v),
+            Err(err) => panic!("{}", err),
         }
 
         let json = r#"
@@ -101,8 +101,8 @@ mod tests {
 
                 assert_eq!(v.id, 17865799348089039);
             }
-            Ok(v) => assert!(false, "{:?}", v),
-            Err(err) => assert!(false, "{}", err),
+            Ok(v) => panic!("{:?}", v),
+            Err(err) => panic!("{}", err),
         }
     }
 }

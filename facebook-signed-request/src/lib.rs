@@ -114,7 +114,7 @@ mod tests {
                 assert_eq!(payload.algorithm, "HMAC-SHA256");
                 assert_eq!(payload.issued_at, 1624244156);
             }
-            Err(err) => assert!(false, "{}", err),
+            Err(err) => panic!("{}", err),
         }
     }
 
