@@ -48,6 +48,15 @@ pub enum FacebookPermission {
     UserVideos,
 }
 
+/// [Official doc](https://developers.facebook.com/docs/graph-api/reference/user/permissions/#parameters)
+#[derive(Deserialize_enum_str, Serialize_enum_str, PartialEq, Eq, Hash, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum FacebookPermissionStatus {
+    Granted,
+    Declined,
+    Expired,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -55,7 +64,7 @@ mod tests {
     use serde::Deserialize;
 
     #[test]
-    fn test_de() {
+    fn test_de_permission() {
         #[derive(Deserialize)]
         struct Foo {
             permission: FacebookPermission,
@@ -120,6 +129,33 @@ mod tests {
                 .unwrap()
                 .permission,
             FacebookPermission::PagesManageMetadata
+        );
+    }
+
+    #[test]
+    fn test_de_status() {
+        #[derive(Deserialize)]
+        struct Foo {
+            status: FacebookPermissionStatus,
+        }
+
+        assert_eq!(
+            serde_json::from_str::<Foo>(r#"{"status": "granted"}"#)
+                .unwrap()
+                .status,
+            FacebookPermissionStatus::Granted
+        );
+        assert_eq!(
+            serde_json::from_str::<Foo>(r#"{"status": "declined"}"#)
+                .unwrap()
+                .status,
+            FacebookPermissionStatus::Declined
+        );
+        assert_eq!(
+            serde_json::from_str::<Foo>(r#"{"status": "expired"}"#)
+                .unwrap()
+                .status,
+            FacebookPermissionStatus::Expired
         );
     }
 }
