@@ -47,6 +47,11 @@ pub enum FacebookPermission {
     UserPosts,
     UserVideos,
 }
+impl Default for FacebookPermission {
+    fn default() -> Self {
+        Self::Email
+    }
+}
 
 /// [Official doc](https://developers.facebook.com/docs/graph-api/reference/user/permissions/#parameters)
 #[derive(Deserialize_enum_str, Serialize_enum_str, PartialEq, Eq, Hash, Debug, Clone)]
@@ -55,6 +60,11 @@ pub enum FacebookPermissionStatus {
     Granted,
     Declined,
     Expired,
+}
+impl Default for FacebookPermissionStatus {
+    fn default() -> Self {
+        Self::Granted
+    }
 }
 
 #[cfg(test)]
