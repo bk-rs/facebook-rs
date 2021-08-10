@@ -46,6 +46,8 @@ pub enum FacebookPermission {
     UserPhotos,
     UserPosts,
     UserVideos,
+    #[serde(other)]
+    Other(String),
 }
 impl Default for FacebookPermission {
     fn default() -> Self {
@@ -129,7 +131,10 @@ mod tests {
             match serde_json::from_str::<Foo>(
                 format!(r#"{{"permission": "{}"}}"#, permission).as_str(),
             ) {
-                Ok(_) => {}
+                Ok(x) => match x.permission {
+                    FacebookPermission::Other(s) => panic!("unknown {}", s),
+                    _ => {}
+                },
                 Err(err) => panic!("{}", err),
             }
         }
@@ -139,6 +144,13 @@ mod tests {
                 .unwrap()
                 .permission,
             FacebookPermission::PagesManageMetadata
+        );
+
+        assert_eq!(
+            serde_json::from_str::<Foo>(r#"{"permission": "openid"}"#)
+                .unwrap()
+                .permission,
+            FacebookPermission::Other("openid".to_owned())
         );
     }
 
