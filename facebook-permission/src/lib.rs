@@ -74,6 +74,7 @@ mod tests {
     use super::*;
 
     use serde::Deserialize;
+    use serde_json::{Map, Value};
 
     #[test]
     fn test_de_permission() {
@@ -131,10 +132,11 @@ mod tests {
             match serde_json::from_str::<Foo>(
                 format!(r#"{{"permission": "{}"}}"#, permission).as_str(),
             ) {
-                Ok(x) => match x.permission {
-                    FacebookPermission::Other(s) => panic!("unknown {}", s),
-                    _ => {}
-                },
+                Ok(x) => {
+                    if let FacebookPermission::Other(s) = x.permission {
+                        panic!("unknown {}", s)
+                    }
+                }
                 Err(err) => panic!("{}", err),
             }
         }
@@ -179,5 +181,21 @@ mod tests {
                 .status,
             FacebookPermissionStatus::Expired
         );
+    }
+
+    #[test]
+    fn test_de() {
+        #[derive(Deserialize)]
+        struct Foo {
+            permission: FacebookPermission,
+            status: FacebookPermissionStatus,
+        }
+
+        let map: Map<String, Value> =
+            serde_json::from_str(r#"{"permission": "pages_manage_metadata", "status": "granted"}"#)
+                .unwrap();
+        let x: Foo = serde_json::from_value(Value::Object(map)).unwrap();
+        assert_eq!(x.permission, FacebookPermission::PagesManageMetadata);
+        assert_eq!(x.status, FacebookPermissionStatus::Granted);
     }
 }
