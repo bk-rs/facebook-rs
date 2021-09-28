@@ -13,11 +13,12 @@ categories = []
 readme = "README.md"
 
 [package.metadata.docs.rs]
-features = [ "with-fb-login-deauth-callback" ]
+all-features = true
 
 [features]
-default = ["with-fb-login-deauth-callback"]
+default = ["with-fb-login-deauth-callback", "with-data-deletion-callback"]
 with-fb-login-deauth-callback = ["serde-aux", "chrono"]
+with-data-deletion-callback = ["serde-aux", "chrono"]
 
 [dependencies]
 base64 = { version ="0.13", default-features = false, features = ["std"] }

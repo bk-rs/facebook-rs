@@ -4,6 +4,8 @@ use sha2::Sha256;
 
 type HmacSha256 = Hmac<Sha256>;
 
+#[cfg(feature = "with-data-deletion-callback")]
+pub mod data_deletion_callback;
 #[cfg(feature = "with-fb-login-deauth-callback")]
 pub mod fb_login_deauth_callback;
 
