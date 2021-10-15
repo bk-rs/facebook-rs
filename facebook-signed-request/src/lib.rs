@@ -8,6 +8,10 @@ type HmacSha256 = Hmac<Sha256>;
 pub mod data_deletion_callback;
 #[cfg(feature = "with-fb-login-deauth-callback")]
 pub mod fb_login_deauth_callback;
+#[cfg(feature = "with-ig-basic-display-data-deletion-request")]
+pub mod ig_basic_display_data_deletion_request;
+#[cfg(feature = "with-ig-basic-display-deauth-callback")]
+pub mod ig_basic_display_deauth_callback;
 
 pub const NORMALLY_ALGORITHM: &str = "HMAC-SHA256";
 

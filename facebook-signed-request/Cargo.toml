@@ -16,9 +16,16 @@ readme = "README.md"
 all-features = true
 
 [features]
-default = ["with-fb-login-deauth-callback", "with-data-deletion-callback"]
+default = [
+    "with-fb-login-deauth-callback",
+    "with-data-deletion-callback",
+    "with-ig-basic-display-deauth-callback",
+    "with-ig-basic-display-data-deletion-request",
+]
 with-fb-login-deauth-callback = ["serde-aux", "chrono"]
 with-data-deletion-callback = ["serde-aux", "chrono"]
+with-ig-basic-display-deauth-callback = ["serde-aux", "chrono"]
+with-ig-basic-display-data-deletion-request = ["serde-aux", "chrono"]
 
 [dependencies]
 base64 = { version ="0.13", default-features = false, features = ["std"] }
