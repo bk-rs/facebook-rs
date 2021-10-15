@@ -1,6 +1,6 @@
 [package]
 name = "facebook-fb-login-deauth-callback"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["vkill <vkill.net@gmail.com>"]
 edition = "2018"
 description = "Facebook - Facebook Login Deauthorize Callback"
@@ -13,7 +13,7 @@ categories = []
 readme = "README.md"
 
 [dependencies]
-facebook-signed-request = { path = "../facebook-signed-request", version = "=0.1.2" }
+facebook-signed-request = { path = "../facebook-signed-request", version = "^0.1" }
 
 http = { version = "0.2", default-features = false }
 form_urlencoded = { version = "1.0", default-features = false }
