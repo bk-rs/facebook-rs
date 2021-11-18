@@ -1,9 +1,0 @@
-[package]
-name = "facebook-graph-api-explorer-kit"
-version = "0.1.0"
-edition = "2018"
-
-[dependencies]
-url = { version = "2.2", default-features = false }
-
-thiserror = { version = "1.0", default-features = false }
