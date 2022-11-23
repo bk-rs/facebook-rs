@@ -16,4 +16,4 @@ readme = "README.md"
 facebook-signed-request = { path = "../facebook-signed-request", version = "^0.1" }
 
 http = { version = "0.2", default-features = false }
-form_urlencoded = { version = "1.0", default-features = false }
+form_urlencoded = { version = "1", default-features = false }

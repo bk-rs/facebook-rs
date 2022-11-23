@@ -9,7 +9,7 @@ use std::{
 };
 
 use chrono::{serde::ts_seconds, DateTime, Utc};
-use hmac::{Hmac, Mac as _, NewMac as _};
+use hmac::{Hmac, Mac as _};
 use http::StatusCode;
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;

@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 facebook-webhook-warp = { path = "../warp" }
 
-tokio = { version = "1.7", default-features = false, features = ["macros", "rt-multi-thread"] }
-pretty_env_logger = "0.4"
-warp = "0.3"
-passwords = "3.1"
+tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
+pretty_env_logger = { version = "0.4" }
+warp = { version = "0.3" }
+passwords = { version = "3" }

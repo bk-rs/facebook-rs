@@ -1,4 +1,4 @@
-use hmac::{Hmac, Mac as _, NewMac as _};
+use hmac::{Hmac, Mac as _};
 use serde::de::DeserializeOwned;
 use sha2::Sha256;
 
