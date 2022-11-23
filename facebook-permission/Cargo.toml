@@ -2,7 +2,7 @@
 name = "facebook-permission"
 version = "0.1.5"
 authors = ["vkill <vkill.net@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Facebook - Permission"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/bk-rs/facebook-rs"
