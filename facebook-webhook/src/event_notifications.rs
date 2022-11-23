@@ -21,7 +21,7 @@ type HmacSha1 = Hmac<Sha1>;
 
 pub const SIGNATURE_HEADER_NAME: &str = "X-Hub-Signature";
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Signature {
     Sha1(String),
 }

@@ -16,7 +16,7 @@ pub enum Permissions {
     PagesManageMetadata(FieldValue),
 }
 
-#[derive(Deserialize, PartialEq, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum Verb {
     Granted,

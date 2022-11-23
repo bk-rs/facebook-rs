@@ -20,7 +20,7 @@ pub fn handle<C: Context>(
     path_prefix: String,
     ctx: C,
     callback: PassBackCallbackFn<'static, C>,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     get_filter(path_prefix.clone(), ctx.clone()).or(post_filter(
         path_prefix,
         ctx,
@@ -31,7 +31,7 @@ pub fn handle<C: Context>(
 fn get_filter<C: Context>(
     path_prefix: String,
     ctx: C,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path(path_prefix)
         .and(warp::path::param::<u64>())
         .and(warp::path::end())
@@ -59,7 +59,7 @@ fn post_filter<C: Context>(
     path_prefix: String,
     ctx: C,
     callback: Arc<PassBackCallbackFn<'static, C>>,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path(path_prefix)
         .and(warp::path::param::<u64>())
         .and(warp::path::end())

@@ -22,7 +22,7 @@ pub fn handle<C: Context>(
     path_prefix: String,
     ctx: C,
     callback: PassBackCallbackFn<'static, C>,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     verification_requests_filter(path_prefix.clone(), ctx.clone()).or(event_notifications_filter(
         path_prefix,
         ctx,
@@ -33,7 +33,7 @@ pub fn handle<C: Context>(
 fn verification_requests_filter<C: Context>(
     path_prefix: String,
     ctx: C,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path(path_prefix)
         .and(warp::path::param::<u64>())
         .and(warp::path::end())
@@ -67,7 +67,7 @@ fn event_notifications_filter<C: Context>(
     path_prefix: String,
     ctx: C,
     callback: Arc<PassBackCallbackFn<'static, C>>,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path(path_prefix)
         .and(warp::path::param::<u64>())
         .and(warp::path::end())
