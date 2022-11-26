@@ -2,16 +2,36 @@
 cargo run -p facebook-permission-html_parser
 */
 
-use std::error;
+use std::{env, error, fs, path::PathBuf};
 
 use convert_case::{Case, Casing as _};
 use scraper::{Html, Selector};
 use selectors::Element as _;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
-    let html = include_str!("../tests/developers_docs_permissions_reference.html");
+    let manifest_path = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
+        PathBuf::from(&manifest_dir)
+    } else {
+        PathBuf::new()
+    };
 
-    let document = Html::parse_document(html);
+    let html_path_1 = manifest_path
+        .join("facebook-permission")
+        .join("html_parser")
+        .join("tests")
+        .join("developers_docs_permissions_reference.html");
+    let html_path = if html_path_1.exists() {
+        html_path_1
+    } else {
+        manifest_path
+            .join("tests")
+            .join("developers_docs_permissions_reference.html")
+    };
+    println!("html_path:{:?}", html_path);
+
+    let html = fs::read_to_string(html_path)?;
+
+    let document = Html::parse_document(&html);
 
     let login_permissions_selector = Selector::parse("#login_permissions").unwrap();
     let login_permissions_div = document
