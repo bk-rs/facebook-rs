@@ -62,7 +62,7 @@ impl Default for FacebookPermission {
 }
 
 /// [Official doc](https://developers.facebook.com/docs/graph-api/reference/user/permissions/#parameters)
-#[derive(Deserialize_enum_str, Serialize_enum_str, PartialEq, Eq, Hash, Debug, Clone)]
+#[derive(Deserialize_enum_str, Serialize_enum_str, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[serde(rename_all = "snake_case")]
 pub enum FacebookPermissionStatus {
     Granted,
