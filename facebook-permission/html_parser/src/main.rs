@@ -2,13 +2,13 @@
 cargo run -p facebook-permission-html_parser
 */
 
-use std::{env, error, fs, path::PathBuf};
+use std::{env, fs, path::PathBuf};
 
 use convert_case::{Case, Casing as _};
 use scraper::{Html, Selector};
 use selectors::Element as _;
 
-fn main() -> Result<(), Box<dyn error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let manifest_path = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
         PathBuf::from(&manifest_dir)
     } else {

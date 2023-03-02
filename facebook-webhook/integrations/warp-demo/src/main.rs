@@ -8,18 +8,18 @@ sudo systemctl reload nginx
 cargo run -p facebook-webhook-warp-demo -- 202000000000000 YOUR_APP_SECRET
 */
 
-use std::{env, error};
+use std::env;
 
 use facebook_webhook_warp::Context;
 use passwords::PasswordGenerator;
 use warp::Filter as _;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn error::Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     run().await
 }
 
-async fn run() -> Result<(), Box<dyn error::Error>> {
+async fn run() -> Result<(), Box<dyn std::error::Error>> {
     if env::var_os("RUST_LOG").is_none() {
         env::set_var("RUST_LOG", "facebook-webhook=info");
     }
@@ -95,7 +95,10 @@ struct MyContext {
     db: i64,
 }
 impl Context for MyContext {
-    fn get_verify_token(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>> {
+    fn get_verify_token(
+        &self,
+        app_id: u64,
+    ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
         if app_id == self.app_id {
             Ok(self.verify_token.to_owned())
         } else {
@@ -103,7 +106,10 @@ impl Context for MyContext {
         }
     }
 
-    fn get_app_secret(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>> {
+    fn get_app_secret(
+        &self,
+        app_id: u64,
+    ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
         if app_id == self.app_id {
             Ok(self.app_secret.to_owned())
         } else {

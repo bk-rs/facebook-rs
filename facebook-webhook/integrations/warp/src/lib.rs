@@ -1,6 +1,7 @@
 pub use facebook_webhook;
 
-use std::{convert::Infallible, error, sync::Arc};
+use core::convert::Infallible;
+use std::sync::Arc;
 
 use bytes::Bytes;
 use facebook_webhook::{
@@ -14,8 +15,14 @@ use warp::{
 };
 
 pub trait Context: Send + Sync + Clone {
-    fn get_verify_token(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>>;
-    fn get_app_secret(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>>;
+    fn get_verify_token(
+        &self,
+        app_id: u64,
+    ) -> Result<String, Box<dyn std::error::Error + Send + Sync>>;
+    fn get_app_secret(
+        &self,
+        app_id: u64,
+    ) -> Result<String, Box<dyn std::error::Error + Send + Sync>>;
 }
 
 pub fn handle<C: Context>(

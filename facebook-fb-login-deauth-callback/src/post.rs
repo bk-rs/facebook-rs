@@ -1,4 +1,5 @@
-use std::{error, future::Future, pin::Pin, sync::Arc};
+use core::{future::Future, pin::Pin};
+use std::sync::Arc;
 
 use facebook_signed_request::{
     fb_login_deauth_callback::{parse as signed_request_parse, Payload as SignedRequestPayload},
@@ -12,7 +13,7 @@ pub type PassBackCallbackFn<'a, C> = Box<
     dyn Fn(
             SignedRequestPayload,
             C,
-        ) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn error::Error>>> + Send>>
+        ) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn std::error::Error>>> + Send>>
         + Send
         + Sync
         + 'a,

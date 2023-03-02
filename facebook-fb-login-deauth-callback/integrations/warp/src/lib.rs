@@ -1,6 +1,7 @@
 pub use facebook_fb_login_deauth_callback;
 
-use std::{collections::HashMap, convert::Infallible, error, sync::Arc};
+use core::convert::Infallible;
+use std::{collections::HashMap, sync::Arc};
 
 use facebook_fb_login_deauth_callback::{
     get::PASS_BACK_STATUS_CODE,
@@ -13,7 +14,10 @@ use warp::{
 };
 
 pub trait Context: Send + Sync + Clone {
-    fn get_app_secret(&self, app_id: u64) -> Result<String, Box<dyn error::Error + Send + Sync>>;
+    fn get_app_secret(
+        &self,
+        app_id: u64,
+    ) -> Result<String, Box<dyn std::error::Error + Send + Sync>>;
 }
 
 pub fn handle<C: Context>(

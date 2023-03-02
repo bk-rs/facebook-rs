@@ -1,12 +1,11 @@
 //! [Official doc](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications)
 
-use std::{
-    error,
+use core::{
     future::Future,
     pin::Pin,
     str::{self, FromStr},
-    sync::Arc,
 };
+use std::sync::Arc;
 
 use chrono::{serde::ts_seconds, DateTime, Utc};
 use hmac::{Hmac, Mac as _};
@@ -139,7 +138,10 @@ impl PermissionsObjectEntry {
 }
 
 pub type PassBackCallbackFn<'a, C> = Box<
-    dyn Fn(Payload, C) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn error::Error>>> + Send>>
+    dyn Fn(
+            Payload,
+            C,
+        ) -> Pin<Box<dyn Future<Output = Result<(), Box<dyn std::error::Error>>> + Send>>
         + Send
         + Sync
         + 'a,
