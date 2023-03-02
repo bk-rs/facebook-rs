@@ -36,7 +36,6 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     let login_permissions_selector = Selector::parse("#login_permissions").unwrap();
     let login_permissions_div = document
         .select(&login_permissions_selector)
-        .into_iter()
         .next()
         .unwrap()
         .parent_element()
@@ -48,7 +47,6 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     let permission_table_selector = Selector::parse("div:nth-child(n+2) table").unwrap();
     let permission_table_vec: Vec<_> = login_permissions_div
         .select(&permission_table_selector)
-        .into_iter()
         .collect();
 
     let permission_table_th_selector = Selector::parse("th:first-child").unwrap();
