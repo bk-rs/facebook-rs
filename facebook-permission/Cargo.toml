@@ -1,6 +1,6 @@
 [package]
 name = "facebook-permission"
-version = "0.1.7"
+version = "0.2.0"
 authors = ["vkill <vkill.net@gmail.com>"]
 edition = "2021"
 description = "Facebook - Permission"
