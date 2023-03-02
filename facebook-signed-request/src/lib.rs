@@ -1,3 +1,4 @@
+use base64::{engine::general_purpose, Engine as _};
 use hmac::{Hmac, Mac as _};
 use serde::de::DeserializeOwned;
 use sha2::Sha256;
@@ -34,9 +35,11 @@ pub fn parse<T: Payload>(signed_request: &str, app_secret: &str) -> Result<T, Pa
         return Err(ParseError::SignedRequestInvalid);
     }
 
-    let sig = base64::decode_config(encoded_sig, base64::URL_SAFE)
+    let sig = general_purpose::URL_SAFE_NO_PAD
+        .decode(encoded_sig)
         .map_err(ParseError::EncodedSignatureBase64DecodeFailed)?;
-    let data = base64::decode_config(payload, base64::URL_SAFE)
+    let data = general_purpose::URL_SAFE_NO_PAD
+        .decode(payload)
         .map_err(ParseError::EncodedSignatureBase64DecodeFailed)?;
 
     let data: T = serde_json::from_slice(&data).map_err(ParseError::PayloadJsonDecodeFailed)?;

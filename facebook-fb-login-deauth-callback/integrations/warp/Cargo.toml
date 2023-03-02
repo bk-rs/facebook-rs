@@ -13,6 +13,6 @@ categories = []
 readme = "README.md"
 
 [dependencies]
-facebook-fb-login-deauth-callback = { path = "../..", version = "^0.1" }
+facebook-fb-login-deauth-callback = { version = "0.1", path = "../.." }
 
 warp = { version = "0.3", default-features = false }

@@ -28,7 +28,7 @@ with-ig-basic-display-deauth-callback = ["serde-aux", "chrono"]
 with-ig-basic-display-data-deletion-request = ["serde-aux", "chrono"]
 
 [dependencies]
-base64 = { version ="0.13", default-features = false, features = ["std"] }
+base64 = { version ="0.21", default-features = false, features = ["std"] }
 serde = { version = "1", default-features = false, features = ["derive"] }
 serde_json = { version = "1", default-features = false, features = ["std"] }
 hmac = { version ="0.12", default-features = false }
@@ -41,3 +41,6 @@ thiserror = { version = "1", default-features = false }
 
 [dev-dependencies]
 hex = { version = "0.4" }
+
+[package.metadata.cargo-all-features]
+skip_optional_dependencies = true
